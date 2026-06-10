@@ -1,36 +1,207 @@
-import React, { useState } from "react";
-import { T, PAST_PAPERS, NOTES, TEACHERS } from "./constants";
+import { useState } from "react";
 
-export default function App() {
-  // 1. STATE MANAGEMENT
-  const [page, setPage] = useState("home");
-  const [lang, setLang] = useState("en");
-  const [search, setSearch] = useState("");
-  const [aiQ, setAiQ] = useState("");
-  const [aiA, setAiA] = useState("");
-  const [aiLoading, setAiLoading] = useState(false);
-
-  const t = T[lang];
-
-  // 2. AI LOGIC
-  async function askAI() {
-    if (!aiQ.trim()) return;
-    setAiLoading(true);
-    // Kumbuka kuweka API call yako hapa
-    setAiLoading(false);
+const T = {
+  en: {
+    siteName: "Global Elite Academy",
+    tagline: "World-Class Education for Every Student",
+    heroSub: "Past Papers • Study Notes • AI Tutor • Expert Teachers",
+    nav: { home:"Home", papers:"Past Papers", notes:"Study Notes", ai:"AI Tutor", teachers:"Teachers", about:"About", contact:"Contact" },
+    stats: { papers:"Past Papers", notes:"Study Notes", students:"Students Worldwide", teachers:"Expert Teachers" },
+    sections: { services:"Our Core Services", recentPapers:"Recently Added Papers", askAI:"Ask Our AI Tutor", allNotes:"All Study Materials", allPapers:"Browse All Past Papers", meetTeachers:"Meet Our Expert Teachers", about:"About Global Elite Academy", contact:"Contact Us" },
+    services: [
+      { title:"Past Exam Papers", desc:"Access thousands of past papers from NECTA, Cambridge, IB, and universities worldwide. Prepare smarter." },
+      { title:"Study Notes", desc:"Expert-reviewed notes for all subjects and all levels from primary school to university." },
+      { title:"AI Tutor", desc:"Ask any question, solve math problems, get essay help, generate quizzes, and plan your studies with AI." },
+      { title:"Expert Teachers", desc:"Learn directly from qualified professors and specialist teachers from around the world." }
+    ],
+    aiPlaceholder: "Ask any question... e.g. Explain photosynthesis, Solve 2x+5=13, What caused World War I?",
+    aiBtn: "Ask AI Tutor", aiThinking: "AI is thinking...", aiLabel: "AI Tutor Answer",
+    sendMsg: "Send Message", yourName: "Your Name", yourEmail: "Your Email", yourMsg: "Your Message",
+    download: "Download PDF", viewNotes: "View Notes", allLevels: "All Levels",
+    searchPlaceholder: "Search subjects, topics, levels...", langLabel: "Language",
+    subjects: "Subjects", level: "Level", year: "Year", org: "Organisation",
+    announcement: "🌍 New: Cambridge A-Level 2024 papers now available! Access free for all students.",
+    footerRights: "© 2025 Global Elite Academy. All Rights Reserved.",
+    footerMission: "Making quality education accessible to every student worldwide.",
+    contactInfo: { email:"info@globaleliteacademy.edu", whatsapp:"+1 (800) GEA-LEARN", website:"www.globaleliteacademy.edu" },
+    aboutText: "Global Elite Academy was founded on the belief that every student deserves access to world-class education. We bring together expert teachers, comprehensive past papers, and the power of AI.",
+    mission: "Our Mission", missionText: "To democratize education globally — providing free, high-quality resources to 100 million students by 2030.",
+    team: "Our Team", teamText: "A global team of educators, technologists, and researchers united by one goal: better outcomes for every learner.",
+    reach: "Our Reach", reachText: "We serve students in 150+ countries, with resources in 6 languages and 24/7 AI support.",
+  },
+  fr: {
+    siteName: "Académie Mondiale d'Élite",
+    tagline: "Une Éducation de Classe Mondiale pour Chaque Élève",
+    heroSub: "Examens Passés • Notes d'Études • Tuteur IA • Professeurs Experts",
+    nav: { home:"Accueil", papers:"Examens Passés", notes:"Notes", ai:"Tuteur IA", teachers:"Professeurs", about:"À Propos", contact:"Contact" },
+    stats: { papers:"Examens Passés", notes:"Notes d'Études", students:"Étudiants Mondiaux", teachers:"Professeurs Experts" },
+    sections: { services:"Nos Services Principaux", recentPapers:"Examens Récemment Ajoutés", askAI:"Interrogez Notre Tuteur IA", allNotes:"Tous les Matériaux", allPapers:"Tous les Examens", meetTeachers:"Nos Professeurs", about:"À Propos", contact:"Contactez-Nous" },
+    services: [
+      { title:"Examens Passés", desc:"Accédez à des milliers d'examens de NECTA, Cambridge, IB et universités mondiales." },
+      { title:"Notes d'Études", desc:"Notes vérifiées par des experts pour toutes les matières et tous les niveaux." },
+      { title:"Tuteur IA", desc:"Posez n'importe quelle question, résolvez des maths, obtenez de l'aide avec l'IA." },
+      { title:"Professeurs Experts", desc:"Apprenez auprès de professeurs qualifiés du monde entier." }
+    ],
+    aiPlaceholder: "Posez une question... ex. Expliquez la photosynthèse, Résolvez 2x+5=13",
+    aiBtn: "Interroger l'IA", aiThinking: "L'IA réfléchit...", aiLabel: "Réponse du Tuteur IA",
+    sendMsg: "Envoyer", yourName: "Votre Nom", yourEmail: "Votre Email", yourMsg: "Votre Message",
+    download: "Télécharger PDF", viewNotes: "Voir les Notes", allLevels: "Tous Niveaux",
+    searchPlaceholder: "Rechercher matières, sujets...", langLabel: "Langue",
+    subjects: "Matières", level: "Niveau", year: "Année", org: "Organisation",
+    announcement: "🌍 Nouveau: Examens Cambridge A-Level 2024 disponibles! Accès gratuit.",
+    footerRights: "© 2025 Académie Mondiale d'Élite. Tous droits réservés.",
+    footerMission: "Rendre l'éducation accessible à chaque étudiant dans le monde.",
+    contactInfo: { email:"info@globaleliteacademy.edu", whatsapp:"+1 (800) GEA-LEARN", website:"www.globaleliteacademy.edu" },
+    aboutText: "L'Académie Mondiale d'Élite a été fondée sur la conviction que chaque étudiant mérite un accès à une éducation de classe mondiale.",
+    mission: "Notre Mission", missionText: "Démocratiser l'éducation mondialement pour 100 millions d'étudiants d'ici 2030.",
+    team: "Notre Équipe", teamText: "Une équipe mondiale unie par un objectif: de meilleurs résultats pour chaque apprenant.",
+    reach: "Notre Portée", reachText: "Nous servons des étudiants dans 150+ pays avec un support IA 24/7.",
+  },
+  zh: {
+    siteName: "全球精英学院",
+    tagline: "为每一位学生提供世界级教育",
+    heroSub: "历年试卷 • 学习笔记 • AI辅导 • 专家教师",
+    nav: { home:"首页", papers:"历年试卷", notes:"学习笔记", ai:"AI辅导", teachers:"教师", about:"关于我们", contact:"联系我们" },
+    stats: { papers:"历年试卷", notes:"学习笔记", students:"全球学生", teachers:"专家教师" },
+    sections: { services:"核心服务", recentPapers:"最新试卷", askAI:"询问AI辅导", allNotes:"所有材料", allPapers:"浏览试卷", meetTeachers:"专家教师", about:"关于我们", contact:"联系我们" },
+    services: [
+      { title:"历年试卷", desc:"获取来自NECTA、剑桥、IB和全球大学的数千份历年试卷。" },
+      { title:"学习笔记", desc:"专家审核的所有科目笔记——从小学到大学。" },
+      { title:"AI辅导", desc:"提问任何问题，解决数学问题，获得作文帮助。" },
+      { title:"专家教师", desc:"直接向来自世界各地的合格教授学习。" }
+    ],
+    aiPlaceholder: "提任何问题... 例如：解释光合作用，解2x+5=13",
+    aiBtn: "询问AI", aiThinking: "AI正在思考...", aiLabel: "AI辅导答案",
+    sendMsg: "发送消息", yourName: "您的姓名", yourEmail: "您的邮箱", yourMsg: "您的消息",
+    download: "下载PDF", viewNotes: "查看笔记", allLevels: "所有级别",
+    searchPlaceholder: "搜索科目、主题...", langLabel: "语言",
+    subjects: "科目", level: "级别", year: "年份", org: "机构",
+    announcement: "🌍 新增：2024年剑桥A-Level试卷现已上线！所有学生免费获取。",
+    footerRights: "© 2025 全球精英学院。版权所有。",
+    footerMission: "让每一位全球学生都能获得优质教育。",
+    contactInfo: { email:"info@globaleliteacademy.edu", whatsapp:"+1 (800) GEA-LEARN", website:"www.globaleliteacademy.edu" },
+    aboutText: "全球精英学院的创立基于这样一个信念：每一位学生都应该获得世界级教育。",
+    mission: "我们的使命", missionText: "到2030年为1亿名学生提供免费、高质量的资源。",
+    team: "我们的团队", teamText: "全球团队目标一致：让每位学习者取得更好的成绩。",
+    reach: "我们的覆盖范围", reachText: "我们为150多个国家的学生提供服务。",
+  },
+  de: {
+    siteName: "Global Elite Akademie",
+    tagline: "Weltklasse-Bildung für jeden Studenten",
+    heroSub: "Vergangene Prüfungen • Lernnotizen • KI-Tutor • Expertenlehrer",
+    nav: { home:"Startseite", papers:"Prüfungen", notes:"Notizen", ai:"KI-Tutor", teachers:"Lehrer", about:"Über Uns", contact:"Kontakt" },
+    stats: { papers:"Vergangene Prüfungen", notes:"Lernnotizen", students:"Weltweite Studenten", teachers:"Expertenlehrer" },
+    sections: { services:"Unsere Dienste", recentPapers:"Neue Prüfungen", askAI:"KI-Tutor Fragen", allNotes:"Alle Materialien", allPapers:"Alle Prüfungen", meetTeachers:"Unsere Lehrer", about:"Über Uns", contact:"Kontakt" },
+    services: [
+      { title:"Vergangene Prüfungen", desc:"Tausende von Prüfungen von NECTA, Cambridge, IB und Universitäten weltweit." },
+      { title:"Lernnotizen", desc:"Expertengeprüfte Notizen für alle Fächer und Niveaus." },
+      { title:"KI-Tutor", desc:"Stellen Sie Fragen, lösen Sie Matheprobleme mit KI-Hilfe." },
+      { title:"Expertenlehrer", desc:"Lernen Sie von qualifizierten Professoren aus der ganzen Welt." }
+    ],
+    aiPlaceholder: "Stellen Sie eine Frage... z.B. Photosynthese erklären, 2x+5=13 lösen",
+    aiBtn: "KI Fragen", aiThinking: "KI denkt nach...", aiLabel: "KI-Tutor Antwort",
+    sendMsg: "Senden", yourName: "Ihr Name", yourEmail: "Ihre E-Mail", yourMsg: "Ihre Nachricht",
+    download: "PDF Herunterladen", viewNotes: "Notizen Ansehen", allLevels: "Alle Niveaus",
+    searchPlaceholder: "Fächer, Themen suchen...", langLabel: "Sprache",
+    subjects: "Fächer", level: "Niveau", year: "Jahr", org: "Organisation",
+    announcement: "🌍 Neu: Cambridge A-Level 2024 Prüfungen verfügbar! Kostenloser Zugang.",
+    footerRights: "© 2025 Global Elite Akademie. Alle Rechte vorbehalten.",
+    footerMission: "Hochwertige Bildung für jeden Studenten weltweit.",
+    contactInfo: { email:"info@globaleliteacademy.edu", whatsapp:"+1 (800) GEA-LEARN", website:"www.globaleliteacademy.edu" },
+    aboutText: "Die Global Elite Akademie wurde gegründet damit jeder Schüler Zugang zu Weltklasse-Bildung bekommt.",
+    mission: "Unsere Mission", missionText: "Bildung für 100 Millionen Schüler bis 2030 kostenlos bereitzustellen.",
+    team: "Unser Team", teamText: "Ein globales Team vereint durch ein Ziel: bessere Ergebnisse für jeden.",
+    reach: "Unsere Reichweite", reachText: "Studenten in 150+ Ländern mit 24/7 KI-Support.",
+  },
+  sw: {
+    siteName: "Chuo cha Wasomi Duniani",
+    tagline: "Elimu Bora Duniani kwa Kila Mwanafunzi",
+    heroSub: "Mitihani Iliyopita • Notisi za Masomo • Msaada wa AI • Walimu Wataalam",
+    nav: { home:"Nyumbani", papers:"Mitihani Iliyopita", notes:"Notisi", ai:"Msaada wa AI", teachers:"Walimu", about:"Kuhusu Sisi", contact:"Wasiliana" },
+    stats: { papers:"Mitihani Iliyopita", notes:"Notisi za Masomo", students:"Wanafunzi Duniani", teachers:"Walimu Wataalam" },
+    sections: { services:"Huduma Zetu Kuu", recentPapers:"Mitihani Mpya", askAI:"Uliza AI", allNotes:"Vifaa Vyote", allPapers:"Mitihani Yote", meetTeachers:"Walimu Wetu", about:"Kuhusu Sisi", contact:"Wasiliana Nasi" },
+    services: [
+      { title:"Mitihani Iliyopita", desc:"Pata maelfu ya mitihani kutoka NECTA, Cambridge, IB, na vyuo vikuu duniani." },
+      { title:"Notisi za Masomo", desc:"Notisi zilizokaguliwa na wataalamu kwa masomo yote na viwango vyote." },
+      { title:"Msaada wa AI", desc:"Uliza swali lolote, suluhisha hesabu, pata msaada wa insha kwa AI." },
+      { title:"Walimu Wataalam", desc:"Jifunze kutoka kwa maprofesa na walimu wataalam duniani kote." }
+    ],
+    aiPlaceholder: "Uliza swali lolote... mfano: Eleza osmosis, Suluhisha 2x+5=13",
+    aiBtn: "Uliza AI", aiThinking: "AI inashughulikia...", aiLabel: "Jibu la AI",
+    sendMsg: "Tuma Ujumbe", yourName: "Jina Lako", yourEmail: "Barua Pepe", yourMsg: "Ujumbe Wako",
+    download: "Pakua PDF", viewNotes: "Tazama Notisi", allLevels: "Viwango Vyote",
+    searchPlaceholder: "Tafuta masomo, mada...", langLabel: "Lugha",
+    subjects: "Masomo", level: "Kiwango", year: "Mwaka", org: "Shirika",
+    announcement: "🌍 Mpya: Mitihani ya Cambridge A-Level 2024 inapatikana! Bure kwa wanafunzi wote.",
+    footerRights: "© 2025 Chuo cha Wasomi Duniani. Haki Zote Zimehifadhiwa.",
+    footerMission: "Kuleta elimu bora kwa kila mwanafunzi duniani kote.",
+    contactInfo: { email:"info@globaleliteacademy.edu", whatsapp:"+1 (800) GEA-LEARN", website:"www.globaleliteacademy.edu" },
+    aboutText: "Chuo chetu kilianzishwa kwa imani kwamba kila mwanafunzi anastahili elimu bora.",
+    mission: "Dhamira Yetu", missionText: "Kuleta elimu bure na bora kwa wanafunzi milioni 100 ifikapo 2030.",
+    team: "Timu Yetu", teamText: "Timu ya kimataifa inayoshirikiana kwa matokeo bora kwa kila mwanafunzi.",
+    reach: "Tunafikia Wapi", reachText: "Tunahudumia wanafunzi katika nchi 150+ na msaada wa AI masaa 24.",
+  },
+  gb: {
+    siteName: "Global Elite Academy",
+    tagline: "World-Class Education for Every Student",
+    heroSub: "Past Papers • Revision Notes • AI Tutor • Expert Tutors",
+    nav: { home:"Home", papers:"Past Papers", notes:"Revision Notes", ai:"AI Tutor", teachers:"Tutors", about:"About", contact:"Contact" },
+    stats: { papers:"Past Papers", notes:"Revision Notes", students:"Students Worldwide", teachers:"Expert Tutors" },
+    sections: { services:"Our Core Services", recentPapers:"Recently Added Papers", askAI:"Ask Our AI Tutor", allNotes:"All Revision Materials", allPapers:"Browse All Past Papers", meetTeachers:"Meet Our Expert Tutors", about:"About Us", contact:"Contact Us" },
+    services: [
+      { title:"Past Exam Papers", desc:"Access thousands of past papers from OCR, AQA, Edexcel, Cambridge and universities worldwide." },
+      { title:"Revision Notes", desc:"Expert-reviewed notes for all subjects and all levels from primary to university." },
+      { title:"AI Tutor", desc:"Ask any question, solve maths problems, get essay guidance and plan your revision." },
+      { title:"Expert Tutors", desc:"Learn directly from qualified professors and specialist tutors across the globe." }
+    ],
+    aiPlaceholder: "Ask anything... e.g. Explain photosynthesis, Solve 2x+5=13, What caused WWI?",
+    aiBtn: "Ask AI Tutor", aiThinking: "AI is thinking...", aiLabel: "AI Tutor Answer",
+    sendMsg: "Send Message", yourName: "Your Name", yourEmail: "Your Email", yourMsg: "Your Message",
+    download: "Download PDF", viewNotes: "View Notes", allLevels: "All Levels",
+    searchPlaceholder: "Search subjects, topics, levels...", langLabel: "Language",
+    subjects: "Subjects", level: "Level", year: "Year", org: "Examining Body",
+    announcement: "🌍 New: Cambridge A-Level 2024 papers now available! Free access for all students.",
+    footerRights: "© 2025 Global Elite Academy. All Rights Reserved.",
+    footerMission: "Making quality education accessible to every student worldwide.",
+    contactInfo: { email:"info@globaleliteacademy.edu", whatsapp:"+1 (800) GEA-LEARN", website:"www.globaleliteacademy.edu" },
+    aboutText: "Global Elite Academy was founded on the belief that every student deserves access to world-class education.",
+    mission: "Our Mission", missionText: "To democratise education globally for 100 million students by 2030.",
+    team: "Our Team", teamText: "A global team united by one goal: better outcomes for every learner.",
+    reach: "Our Reach", reachText: "We serve students in 150+ countries with 24/7 AI support.",
   }
+};
 
-  // 3. RENDER HELPERS
-  const filteredPapers = PAST_PAPERS.filter(p => 
-    p.subject.toLowerCase().includes(search.toLowerCase())
-  );
+const PAST_PAPERS = [
+  { subject:"Mathematics", level:"GCSE / Form 4", org:"Cambridge IGCSE", year:"2024", img:"https://images.unsplash.com/photo-1509228468518-180dd4864904?w=120&h=80&fit=crop" },
+  { subject:"Physics", level:"A-Level / Form 6", org:"Cambridge", year:"2024", img:"https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=120&h=80&fit=crop" },
+  { subject:"Chemistry", level:"A-Level", org:"AQA / Edexcel", year:"2024", img:"https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=120&h=80&fit=crop" },
+  { subject:"Biology", level:"GCSE", org:"OCR / NECTA", year:"2024", img:"https://images.unsplash.com/photo-1530026186672-2cd00ffc50fe?w=120&h=80&fit=crop" },
+  { subject:"English Language", level:"All Levels", org:"NECTA / Cambridge", year:"2023", img:"https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=120&h=80&fit=crop" },
+  { subject:"Advanced Mathematics", level:"University / Form 6", org:"IAA / Cambridge", year:"2024", img:"https://images.unsplash.com/photo-1596495577886-d920f1fb7238?w=120&h=80&fit=crop" },
+  { subject:"Computer Science", level:"University", org:"IAA", year:"2024", img:"https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=120&h=80&fit=crop" },
+  { subject:"Economics", level:"A-Level / Form 6", org:"IB / NECTA", year:"2023", img:"https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=120&h=80&fit=crop" },
+  { subject:"History", level:"GCSE / O-Level", org:"Cambridge", year:"2023", img:"https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=120&h=80&fit=crop" },
+  { subject:"Geography", level:"GCSE", org:"AQA", year:"2023", img:"https://images.unsplash.com/photo-1446776709462-d6b525b9c0fd?w=120&h=80&fit=crop" },
+  { subject:"Discrete Mathematics", level:"University", org:"IAA", year:"2024", img:"https://images.unsplash.com/photo-1509228468518-180dd4864904?w=120&h=80&fit=crop" },
+  { subject:"Database Systems", level:"University", org:"IAA", year:"2024", img:"https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=120&h=80&fit=crop" },
+];
 
-  return (
-    <div className="app">
-      {/* Hapa ndipo utaweka muundo wako wa UI */}
-      {/* Mfano: Nav, Hero, Sections, Footer */}
-      <h1>{t.siteName}</h1>
-      <button onClick={() => setPage("home")}>{t.nav.home}</button>
-    </div>
-  );
-}
+const NOTES = [
+  { title:"Algebra & Calculus", level:"Secondary / A-Level", icon:"📐", subject:"Mathematics", img:"https://images.unsplash.com/photo-1509228468518-180dd4864904?w=200&h=130&fit=crop", desc:"Complete notes on functions, differentiation, integration and more." },
+  { title:"Mechanics & Electricity", level:"A-Level", icon:"⚡", subject:"Physics", img:"https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=200&h=130&fit=crop", desc:"Newton's laws, circuits, electromagnetism and quantum basics." },
+  { title:"Cell Biology & Genetics", level:"GCSE / A-Level", icon:"🧬", subject:"Biology", img:"https://images.unsplash.com/photo-1530026186672-2cd00ffc50fe?w=200&h=130&fit=crop", desc:"DNA structure, mitosis, meiosis, inheritance and evolution." },
+  { title:"Organic Chemistry", level:"A-Level", icon:"🧪", subject:"Chemistry", img:"https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=200&h=130&fit=crop", desc:"Hydrocarbons, functional groups, reactions and mechanisms." },
+  { title:"Grammar & Comprehension", level:"All Levels", icon:"📝", subject:"English", img:"https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=200&h=130&fit=crop", desc:"Essay writing, grammar rules, reading comprehension techniques." },
+  { title:"Data Structures & Algorithms", level:"University", icon:"💻", subject:"Computer Science", img:"https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=200&h=130&fit=crop", desc:"Arrays, trees, graphs, sorting algorithms and complexity." },
+  { title:"Micro & Macro Economics", level:"A-Level", icon:"📊", subject:"Economics", img:"https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=200&h=130&fit=crop", desc:"Supply and demand, market structures, GDP and fiscal policy." },
+  { title:"World & Local History", level:"GCSE", icon:"📜", subject:"History", img:"https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=200&h=130&fit=crop", desc:"WWI, WWII, colonialism, independence movements worldwide." },
+];
+
+const TEACHERS = [
+  { name:"Prof. Sarah Okonkwo", subject:"Mathematics & Statistics", country:"Nigeria / UK", rating:4.9, reviews:1240, img:"https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop", bio:"PhD from Oxford. 18 years teaching university-level mathematics.", quals:"PhD Mathematics, Oxford University" },
+  { name:"Dr. James Chen", subject:"Physics & Engineering", country:"China / USA", rating:4.8, reviews:980, img:"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop", bio:"MIT graduate with 15 years in research and teaching.", quals:"PhD Physics, MIT" },
+  { name:"Ms. Amina Hassan", subject:"Biology & Chemistry", country:"Kenya / Canada", rating:4.9, reviews:1560, img:"https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=120&h=120&fit=crop", bio:"Medical doctor turned educator passionate about life sciences.", quals:"MBBS, MSc Education, Toronto" },
+  { name:"Prof. Klaus Weber", subject:"Economics & Business", country:"Germany", rating:4.7, reviews:720, img:"https://images.unsplash.com/photo-1560250097-0b93528c311a?w=120&h=120&fit=crop", bio:"Former World Bank economist bridging theory and practice.", quals:"PhD Economics, Humboldt University" },
+  { name:"Dr. Marie Dubois", subject:"French & Literature", country:"France / Senegal", rating:4.8, reviews:890, img:"https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&h=120&fit=crop", bio:"Native French speaker with deep knowledge of Francophone literature.", quals:"PhD Linguistics, Sorbonne" },
+  { name:"Mr. Rajesh Sharma", subject:"Computer Science & AI", country:"India / USA", rating:4.9, reviews:2100, img:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop", bio:"Former Google engineer turned full-time educator in AI and coding.", quals:"MSc Computer Science, Stanford" },
+];
