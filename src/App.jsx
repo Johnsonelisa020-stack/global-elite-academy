@@ -205,3 +205,329 @@ const TEACHERS = [
   { name:"Dr. Marie Dubois", subject:"French & Literature", country:"France / Senegal", rating:4.8, reviews:890, img:"https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&h=120&fit=crop", bio:"Native French speaker with deep knowledge of Francophone literature.", quals:"PhD Linguistics, Sorbonne" },
   { name:"Mr. Rajesh Sharma", subject:"Computer Science & AI", country:"India / USA", rating:4.9, reviews:2100, img:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop", bio:"Former Google engineer turned full-time educator in AI and coding.", quals:"MSc Computer Science, Stanford" },
 ];
+return (
+    <>
+      <style>{css}</style>
+      <div className="app">
+        {annVisible && (
+          <div className="announcement">
+            <span>{t.announcement}</span>
+            <button className="ann-close" onClick={() => setAnnVisible(false)}>✕</button>
+          </div>
+        )}
+
+        <nav className="topnav">
+          <div className="nav-inner">
+            <div className="nav-logo" onClick={() => goPage("home")}>
+              <div className="nav-logo-icon">🎓</div>
+              <span className="nav-logo-text">{t.siteName}</span>
+            </div>
+            <div className="nav-links">
+              {navPages.map(p => (
+                <button key={p} className={`nav-link${page===p?" active":""}`} onClick={() => goPage(p)}>
+                  {navIcons[p]} {t.nav[p]}
+                </button>
+              ))}
+            </div>
+            <div className="nav-right">
+              <select className="lang-select" value={lang} onChange={e => setLang(e.target.value)}>
+                {LANGS.map(l => <option key={l.code} value={l.code}>{l.label}</option>)}
+              </select>
+              <button className="hamburger" onClick={() => setMenuOpen(m => !m)}>☰</button>
+            </div>
+          </div>
+          <div className={`mobile-menu${menuOpen?" open":""}`}>
+            {navPages.map(p => (
+              <div key={p} className="mobile-link" onClick={() => goPage(p)}>{navIcons[p]} {t.nav[p]}</div>
+            ))}
+          </div>
+        </nav>
+
+        {page === "home" && <>
+          <div className="hero">
+            <div className="container">
+              <div className="hero-badge">🌍 World-Class Education Platform</div>
+              <h1 className="hero-title">{t.siteName}</h1>
+              <p style={{fontSize:"22px",color:"rgba(255,255,255,0.9)",fontWeight:600,marginBottom:8}}>{t.tagline}</p>
+              <p className="hero-sub">{t.heroSub}</p>
+              <div className="hero-btns">
+                <button className="btn-primary" onClick={() => goPage("papers")}>📄 {t.nav.papers}</button>
+                <button className="btn-outline" onClick={() => goPage("ai")}>🤖 {t.nav.ai}</button>
+                <button className="btn-outline" onClick={() => goPage("teachers")}>👨‍🏫 {t.nav.teachers}</button>
+              </div>
+            </div>
+          </div>
+          <div className="stats-bar">
+            <div className="container">
+              <div className="stats-grid">
+                {[["500+",t.stats.papers],["1,200+",t.stats.notes],["100K+",t.stats.students],["50+",t.stats.teachers]].map(([n,l]) => (
+                  <div key={l} className="stat-item"><div className="stat-num">{n}</div><div className="stat-lbl">{l}</div></div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="section">
+            <div className="container">
+              <div className="sec-header">
+                <span className="sec-eyebrow">What We Offer</span>
+                <h2 className="sec-title">{t.sections.services}</h2>
+              </div>
+              <div className="services-grid">
+                {[{icon:"📄",nav:"papers"},{icon:"📚",nav:"notes"},{icon:"🤖",nav:"ai"},{icon:"👨‍🏫",nav:"teachers"}].map((s,i) => (
+                  <div key={i} className="service-card" onClick={() => goPage(s.nav)}>
+                    <div className="service-icon">{s.icon}</div>
+                    <div className="service-title">{t.services[i].title}</div>
+                    <div className="service-desc">{t.services[i].desc}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="section-alt">
+            <div className="container">
+              <div className="sec-header">
+                <span className="sec-eyebrow">Just Added</span>
+                <h2 className="sec-title">{t.sections.recentPapers}</h2>
+              </div>
+              <div className="paper-grid">
+                {PAST_PAPERS.slice(0,6).map((p,i) => (
+                  <div key={i} className="paper-card">
+                    <img src={p.img} alt={p.subject} className="paper-img"/>
+                    <div className="paper-body">
+                      <div className="paper-subject">{p.subject}</div>
+                      <div className="paper-meta">{t.org}: {p.org} | {t.year}: {p.year}</div>
+                      <span className="paper-tag">{p.level}</span>
+                      <button className="paper-btn" style={{marginTop:12}} onClick={() => goPage("papers")}>{t.download} ↓</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div style={{textAlign:"center",marginTop:28}}>
+                <button className="btn-primary" style={{background:"#0057d9",color:"#fff"}} onClick={() => goPage("papers")}>View All Past Papers →</button>
+              </div>
+            </div>
+          </div>
+          <div className="section">
+            <div className="container">
+              <div className="ai-box">
+                <div className="ai-box-title">🤖 {t.sections.askAI}</div>
+                <div className="ai-box-sub">{t.aiPlaceholder}</div>
+                <div className="hero-btns"><button className="btn-primary" onClick={() => goPage("ai")}>{t.aiBtn} →</button></div>
+              </div>
+            </div>
+          </div>
+          <div className="section-alt">
+            <div className="container">
+              <div className="sec-header">
+                <span className="sec-eyebrow">Our Faculty</span>
+                <h2 className="sec-title">{t.sections.meetTeachers}</h2>
+              </div>
+              <div className="teachers-grid">
+                {TEACHERS.slice(0,3).map((tc,i) => (
+                  <div key={i} className="teacher-card">
+                    <div className="teacher-header">
+                      <img src={tc.img} alt={tc.name} className="teacher-img"/>
+                      <div>
+                        <div className="teacher-name">{tc.name}</div>
+                        <div className="teacher-subj">{tc.subject}</div>
+                        <div className="teacher-country">📍 {tc.country}</div>
+                      </div>
+                    </div>
+                    <div className="teacher-quals">{tc.quals}</div>
+                    <div className="teacher-bio">{tc.bio}</div>
+                    <div className="star-row"><span className="stars">★★★★★</span><span className="rating-num">{tc.rating}</span><span className="reviews-cnt">({tc.reviews} reviews)</span></div>
+                  </div>
+                ))}
+              </div>
+              <div style={{textAlign:"center",marginTop:28}}>
+                <button className="btn-primary" style={{background:"#0057d9",color:"#fff"}} onClick={() => goPage("teachers")}>Meet All Teachers →</button>
+              </div>
+            </div>
+          </div>
+        </>}
+
+        {page === "papers" && (
+          <div className="section"><div className="container">
+            <div className="sec-header"><span className="sec-eyebrow">Resources</span><h2 className="sec-title">{t.sections.allPapers}</h2></div>
+            <input className="search-input" placeholder={t.searchPlaceholder} value={search} onChange={e => setSearch(e.target.value)}/>
+            <div className="paper-grid">
+              {filteredPapers.map((p,i) => (
+                <div key={i} className="paper-card">
+                  <img src={p.img} alt={p.subject} className="paper-img"/>
+                  <div className="paper-body">
+                    <div className="paper-subject">{p.subject}</div>
+                    <div className="paper-meta">{t.org}: {p.org}</div>
+                    <span className="paper-tag">{p.level}</span><span className="paper-tag">{p.year}</span>
+                    <button className="paper-btn" style={{marginTop:12}}>{t.download} ↓</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div></div>
+        )}
+
+        {page === "notes" && (
+          <div className="section"><div className="container">
+            <div className="sec-header"><span className="sec-eyebrow">Study Resources</span><h2 className="sec-title">{t.sections.allNotes}</h2></div>
+            <input className="search-input" placeholder={t.searchPlaceholder} value={search} onChange={e => setSearch(e.target.value)}/>
+            <div className="notes-grid">
+              {filteredNotes.map((n,i) => (
+                <div key={i} className="note-card">
+                  <img src={n.img} alt={n.title} className="note-img"/>
+                  <div className="note-body">
+                    <div style={{fontSize:20,marginBottom:4}}>{n.icon}</div>
+                    <div className="note-title">{n.title}</div>
+                    <div className="note-level">{n.level}</div>
+                    <div className="note-desc">{n.desc}</div>
+                    <button className="note-btn">{t.viewNotes} →</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div></div>
+        )}
+
+        {page === "ai" && (
+          <div className="section"><div className="container">
+            <div className="sec-header">
+              <span className="sec-eyebrow">Powered by Claude AI</span>
+              <h2 className="sec-title">{t.sections.askAI}</h2>
+              <p className="sec-desc">Ask any question in any language. Your AI tutor is available 24/7.</p>
+            </div>
+            <div className="ai-box">
+              <div className="ai-box-title">🤖 {t.nav.ai}</div>
+              <div className="ai-input-wrap">
+                <textarea className="ai-textarea" placeholder={t.aiPlaceholder} value={aiQ}
+                  onChange={e => setAiQ(e.target.value)}
+                  onKeyDown={e => { if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();askAI();}}}
+                  rows={2}/>
+                <button className="ai-send-btn" onClick={askAI} disabled={aiLoading||!aiQ.trim()}>
+                  {aiLoading?"...":t.aiBtn}
+                </button>
+              </div>
+              {aiLoading && <div className="ai-thinking"><span>{t.aiThinking}</span><div className="dot-pulse"><span/><span/><span/></div></div>}
+              {aiA && <div className="ai-answer"><div className="ai-answer-label">✅ {t.aiLabel}</div>{aiA}</div>}
+            </div>
+            <div style={{marginTop:48}}>
+              <div className="sec-header"><span className="sec-eyebrow">AI Features</span><h2 className="sec-title">What Can the AI Tutor Do?</h2></div>
+              <div className="services-grid">
+                {[{icon:"✍️",title:"Essay Writer",desc:"Structure, draft and improve essays in any subject."},{icon:"🔢",title:"Math Solver",desc:"Step-by-step algebra, calculus, statistics solutions."},{icon:"❓",title:"Quiz Generator",desc:"Practice questions from any topic."},{icon:"📅",title:"Study Planner",desc:"Personalised revision timetable."},{icon:"👨‍💻",title:"Code Helper",desc:"Programming guidance in any language."},{icon:"🌍",title:"Multilingual",desc:"Answers in EN, FR, ZH, DE, SW, or British English."}].map((tool,i) => (
+                  <div key={i} className="service-card">
+                    <div className="service-icon">{tool.icon}</div>
+                    <div className="service-title">{tool.title}</div>
+                    <div className="service-desc">{tool.desc}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div></div>
+        )}
+
+        {page === "teachers" && (
+          <div className="section"><div className="container">
+            <div className="sec-header"><span className="sec-eyebrow">Global Faculty</span><h2 className="sec-title">{t.sections.meetTeachers}</h2></div>
+            <div className="teachers-grid">
+              {TEACHERS.map((tc,i) => (
+                <div key={i} className="teacher-card">
+                  <div className="teacher-header">
+                    <img src={tc.img} alt={tc.name} className="teacher-img"/>
+                    <div><div className="teacher-name">{tc.name}</div><div className="teacher-subj">{tc.subject}</div><div className="teacher-country">📍 {tc.country}</div></div>
+                  </div>
+                  <div className="teacher-quals">{tc.quals}</div>
+                  <div className="teacher-bio">{tc.bio}</div>
+                  <div className="star-row"><span className="stars">★★★★★</span><span className="rating-num">{tc.rating}</span><span className="reviews-cnt">({tc.reviews} reviews)</span></div>
+                </div>
+              ))}
+            </div>
+          </div></div>
+        )}
+
+        {page === "about" && (
+          <div className="section"><div className="container">
+            <div className="sec-header"><span className="sec-eyebrow">Who We Are</span><h2 className="sec-title">{t.sections.about}</h2><p className="sec-desc">{t.aboutText}</p></div>
+            <div className="about-grid">
+              <div className="about-card"><div className="about-card-title">🎯 {t.mission}</div><div className="about-card-text">{t.missionText}</div></div>
+              <div className="about-card"><div className="about-card-title">👥 {t.team}</div><div className="about-card-text">{t.teamText}</div></div>
+              <div className="about-card"><div className="about-card-title">🌍 {t.reach}</div><div className="about-card-text">{t.reachText}</div></div>
+              <div className="about-card"><div className="about-card-title">🤖 AI-Powered</div><div className="about-card-text">Our platform uses Claude AI to provide instant answers in 6 languages — 24 hours a day, 7 days a week.</div></div>
+            </div>
+            <div style={{background:"linear-gradient(135deg,#003fa3,#0057d9)",borderRadius:20,padding:"40px 30px",marginTop:40,color:"#fff",textAlign:"center"}}>
+              <h3 style={{fontFamily:"'Playfair Display',serif",fontSize:28,marginBottom:24}}>Our Impact in Numbers</h3>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(150px,1fr))",gap:20}}>
+                {[["100K+","Students Worldwide"],["150+","Countries Served"],["500+","Past Papers"],["50+","Expert Teachers"],["6","Languages"],["24/7","AI Support"]].map(([n,l]) => (
+                  <div key={l}><div style={{fontSize:34,fontWeight:900,color:"#4ea8ff"}}>{n}</div><div style={{fontSize:13,color:"rgba(255,255,255,0.75)",marginTop:4}}>{l}</div></div>
+                ))}
+              </div>
+            </div>
+          </div></div>
+        )}
+
+        {page === "contact" && (
+          <div className="section"><div className="container">
+            <div className="sec-header"><span className="sec-eyebrow">Get In Touch</span><h2 className="sec-title">{t.sections.contact}</h2></div>
+            <div className="contact-grid">
+              <div className="contact-info-card">
+                {[{icon:"📧",label:"Email",val:t.contactInfo.email},{icon:"💬",label:"WhatsApp",val:t.contactInfo.whatsapp},{icon:"🌐",label:"Website",val:t.contactInfo.website},{icon:"🕐",label:"Support Hours",val:"24/7 via AI Tutor"}].map((item,i) => (
+                  <div key={i} className="contact-info-item">
+                    <div className="contact-info-icon">{item.icon}</div>
+                    <div><div className="contact-info-label">{item.label}</div><div className="contact-info-val">{item.val}</div></div>
+                  </div>
+                ))}
+                <div style={{background:"#e8f1ff",borderRadius:12,padding:18,marginTop:8}}>
+                  <div style={{fontWeight:700,color:"#0057d9",marginBottom:8}}>🤖 Need instant help?</div>
+                  <div style={{fontSize:13.5,color:"#5a7090",marginBottom:12}}>Our AI Tutor answers any question instantly in your language.</div>
+                  <button className="paper-btn" onClick={() => goPage("ai")}>{t.aiBtn} →</button>
+                </div>
+              </div>
+              <div className="contact-form-card">
+                <h3 style={{fontFamily:"'Playfair Display',serif",fontSize:20,color:"#1a2744",marginBottom:20}}>{t.sections.contact}</h3>
+                {contactSent ? (
+                  <div className="success-msg">✅ Thank you! Message sent. We will reply within 24 hours.</div>
+                ) : (
+                  <>
+                    <div className="form-group"><label className="form-label">{t.yourName}</label><input className="form-input" value={contactForm.name} onChange={e => setContactForm(f=>({...f,name:e.target.value}))} placeholder="John Smith"/></div>
+                    <div className="form-group"><label className="form-label">{t.yourEmail}</label><input className="form-input" type="email" value={contactForm.email} onChange={e => setContactForm(f=>({...f,email:e.target.value}))} placeholder="john@example.com"/></div>
+                    <div className="form-group"><label className="form-label">{t.yourMsg}</label><textarea className="form-textarea" value={contactForm.msg} onChange={e => setContactForm(f=>({...f,msg:e.target.value}))} placeholder="How can we help you?"/></div>
+                    <button className="submit-btn" onClick={() => { if(contactForm.name&&contactForm.email&&contactForm.msg) setContactSent(true); }}>{t.sendMsg} ✉️</button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div></div>
+        )}
+
+        <footer className="footer">
+          <div className="footer-grid">
+            <div>
+              <div className="footer-brand">🎓 {t.siteName}</div>
+              <div className="footer-tagline">{t.footerMission}</div>
+              <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+                {LANGS.map(l => <span key={l.code} style={{cursor:"pointer",fontSize:20}} onClick={() => setLang(l.code)} title={l.label}>{l.label.split(" ")[0]}</span>)}
+              </div>
+            </div>
+            <div>
+              <div className="footer-heading">Resources</div>
+              {["papers","notes","ai","teachers"].map(p => <span key={p} className="footer-link" onClick={() => goPage(p)}>{navIcons[p]} {t.nav[p]}</span>)}
+            </div>
+            <div>
+              <div className="footer-heading">Company</div>
+              {["about","contact"].map(p => <span key={p} className="footer-link" onClick={() => goPage(p)}>{navIcons[p]} {t.nav[p]}</span>)}
+              <span className="footer-link">🔒 Privacy Policy</span>
+              <span className="footer-link">📋 Terms of Use</span>
+            </div>
+            <div>
+              <div className="footer-heading">Subjects</div>
+              {["Mathematics","Physics","Biology","Chemistry","Computer Science","Economics"].map(s => (
+                <span key={s} className="footer-link" onClick={() => { setSearch(s); goPage("papers"); }}>{s}</span>
+              ))}
+            </div>
+          </div>
+          <div className="footer-bottom">
+            <span className="footer-copy">{t.footerRights}</span>
+            <span className="footer-mission-txt">{t.footerMission}</span>
+          </div>
+        </footer>
+      </div>
+    </>
+  );
+}
