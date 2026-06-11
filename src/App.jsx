@@ -1400,5 +1400,4 @@ export default function App() {
     </>
   );
 }
-ENDOFFILE
-echo "File created: $(wc -l < /mnt/user-data/outputs/GlobalEliteAcademy_2026.jsx) lines"
+
