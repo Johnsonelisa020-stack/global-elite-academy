@@ -1272,132 +1272,133 @@ export default function App() {
       </div>
     </div></div>
   );
-
-  // ─── RENDER ────────────────────────────────────────────────────────────────
+  // ── RENDER ────────────────────────────────────────────────────────────────
   return (
     <>
-      <style>{css}</style>
+      <style>{CSS}</style>
       <div className="app">
-        {notification && <div className="notif">{notification.msg}</div>}
+        {notif && <div className="notif">✅ {notif}</div>}
         {signinOpen && <SigninModal/>}
         {signupOpen && <SignupModal/>}
-        {payOpen && selectedPlan && <PayModal/>}
-        {bookingOpen && <BookingModal/>}
+        {payOpen && selPlan && <PayModal/>}
+        {booking && <BookModal/>}
 
-        {/* ANNOUNCEMENT */}
-        {announcementVisible && (
-          <div className="announcement">
-            <span>🌍 New Cambridge A-Level 2024 papers live! </span>
-            <span className="ann-link" onClick={()=>goPage("papers")}>Download free →</span>
-            <span> | Sign up for 10 free eBooks </span>
-            <span className="ann-link" onClick={()=>setSignupOpen(true)}>Join now →</span>
-            <button className="ann-close" onClick={()=>setAnnouncementVisible(false)}>✕</button>
+        {annVis && (
+          <div className="ann">
+            <span>🌍 Cambridge A-Level 2024 papers live!</span>
+            <span className="ann-lnk" onClick={()=>go("papers")}>Download free →</span>
+            <span> | Sign up → 10 free eBooks</span>
+            <span className="ann-lnk" onClick={()=>setSignup(true)}>Join now →</span>
+            <button className="ann-x" onClick={()=>setAnnVis(false)}>✕</button>
           </div>
         )}
 
-        {/* NAV */}
         <nav className="topnav">
           <div className="nav-inner">
-            <div className="nav-logo" onClick={()=>goPage("home")}>
+            <div className="nav-logo" onClick={()=>go("home")}>
               <div className="nav-logo-icon">🎓</div>
-              <div><div className="nav-logo-text">Global Elite Academy</div><div className="nav-logo-sub">2026–2030 Edition</div></div>
+              <div>
+                <div className="nav-logo-text">Global Elite Academy</div>
+                <div className="nav-logo-sub">2026–2030 Edition</div>
+              </div>
             </div>
             <div className="nav-links">
               {MAIN_NAV.map(p=>(
-                <button key={p} className={`nav-link${page===p?" active":""}`} onClick={()=>goPage(p)}>
+                <button key={p} className={`nav-link${page===p?" active":""}`} onClick={()=>go(p)}>
                   {NAV_ICONS[p]} {p.charAt(0).toUpperCase()+p.slice(1)}
                 </button>
               ))}
-              <button className="nav-link" onClick={()=>goPage("faq")}>❓ FAQ</button>
+              <button className="nav-link" onClick={()=>go("faq")}>❓ FAQ</button>
             </div>
             <div className="nav-right">
-              <select className="lang-select" value={lang} onChange={e=>setLang(e.target.value)}>
+              <select className="lang-sel" value={lang} onChange={e=>setLang(e.target.value)}>
                 {LANGS.map(l=><option key={l.code} value={l.code}>{l.flag} {l.label}</option>)}
               </select>
               {user ? (
-                <div className="user-pill" onClick={()=>goPage("dashboard")}>👤 {user.name} · {user.plan}</div>
+                <div className="user-pill" onClick={()=>go("dashboard")}>👤 {user.name} · {user.plan}</div>
               ) : (
                 <>
-                  <button className="nav-btn-outline" onClick={()=>setSigninOpen(true)}>Sign In</button>
-                  <button className="nav-btn-primary" onClick={()=>setSignupOpen(true)}>Get Started Free</button>
+                  <button className="nav-btn-out" onClick={()=>setSignin(true)}>Sign In</button>
+                  <button className="nav-btn-pri" onClick={()=>setSignup(true)}>Get Started Free</button>
                 </>
               )}
               <button className="hamburger" onClick={()=>setMenuOpen(m=>!m)}>☰</button>
             </div>
           </div>
-          <div className={`mobile-menu${menuOpen?" open":""}`}>
+          <div className={`mob-menu${menuOpen?" open":""}`}>
             {[...MAIN_NAV,"faq","dashboard"].map(p=>(
-              <div key={p} className={`mobile-link${page===p?" active":""}`} onClick={()=>goPage(p)}>{NAV_ICONS[p]} {p.charAt(0).toUpperCase()+p.slice(1)}</div>
+              <div key={p} className={`mob-link${page===p?" active":""}`} onClick={()=>go(p)}>
+                {NAV_ICONS[p]} {p.charAt(0).toUpperCase()+p.slice(1)}
+              </div>
             ))}
             <div style={{borderTop:"1px solid #e3f0ff",paddingTop:12,marginTop:8}}>
               {!user ? <>
-                <button style={{width:"100%",padding:"11px",marginBottom:8,background:"#e8f1ff",border:"none",borderRadius:8,color:"#0057d9",fontWeight:600,cursor:"pointer",fontSize:14}} onClick={()=>{setMenuOpen(false);setSigninOpen(true);}}>🔑 Sign In</button>
-                <button style={{width:"100%",padding:"11px",background:"linear-gradient(135deg,#0057d9,#4ea8ff)",border:"none",borderRadius:8,color:"#fff",fontWeight:700,cursor:"pointer",fontSize:14}} onClick={()=>{setMenuOpen(false);setSignupOpen(true);}}>🎓 Get Started Free</button>
-              </> : <div style={{textAlign:"center",padding:"8px",background:"#e8f1ff",borderRadius:8,color:"#0057d9",fontWeight:600}}>👤 {user.name}</div>}
+                <button style={{width:"100%",padding:"11px",marginBottom:8,background:"#e8f1ff",border:"none",borderRadius:8,color:"#0057d9",fontWeight:700,cursor:"pointer",fontSize:14}} onClick={()=>{setMenuOpen(false);setSignin(true);}}>🔑 Sign In</button>
+                <button style={{width:"100%",padding:"11px",background:"linear-gradient(135deg,#0057d9,#4ea8ff)",border:"none",borderRadius:8,color:"#fff",fontWeight:700,cursor:"pointer",fontSize:14}} onClick={()=>{setMenuOpen(false);setSignup(true);}}>🎓 Get Started Free</button>
+              </> : <div style={{textAlign:"center",padding:8,background:"#e8f1ff",borderRadius:8,color:"#0057d9",fontWeight:700}}>👤 {user.name} · {user.plan}</div>}
             </div>
           </div>
         </nav>
 
-        {/* PAGE CONTENT */}
-        {page==="home" && <HomePage/>}
-        {page==="courses" && <CoursesPage/>}
-        {page==="papers" && <PapersPage/>}
-        {page==="tutors" && <TutorsPage/>}
-        {page==="library" && <LibraryPage/>}
-        {page==="blog" && <BlogPage/>}
-        {page==="pricing" && <PricingPage/>}
-        {page==="about" && <AboutPage/>}
-        {page==="contact" && <ContactPage/>}
-        {page==="faq" && <FAQPage/>}
+        {page==="home"      && <HomePage/>}
+        {page==="courses"   && <CoursesPage/>}
+        {page==="papers"    && <PapersPage/>}
+        {page==="tutors"    && <TutorsPage/>}
+        {page==="library"   && <LibraryPage/>}
+        {page==="blog"      && <BlogPage/>}
+        {page==="pricing"   && <PricingPage/>}
+        {page==="about"     && <AboutPage/>}
+        {page==="contact"   && <ContactPage/>}
+        {page==="faq"       && <FAQPage/>}
         {page==="dashboard" && <DashboardPage/>}
-        {page==="signin" && <>{setSigninOpen(true)}{goPage("home")}</>}
 
-        {/* FOOTER */}
         <footer className="footer">
-          <div className="footer-grid">
+          <div className="ft-grid">
             <div>
-              <div className="footer-brand">🎓 Global Elite Academy</div>
-              <p className="footer-tagline">World-class education for every student, from primary to university. Free to start. Available in 6 languages. Built for 2026–2030 and beyond.</p>
+              <div className="ft-brand">🎓 Global Elite Academy</div>
+              <p className="ft-tag">World-class education for every student, primary to university. Free to start. 6 languages. Built for 2026–2030 and beyond.</p>
               <div style={{display:"flex",gap:10,flexWrap:"wrap",marginBottom:14}}>
                 {LANGS.map(l=><span key={l.code} style={{cursor:"pointer",fontSize:20}} onClick={()=>setLang(l.code)} title={l.label}>{l.flag}</span>)}
               </div>
-              <div className="footer-badges">
-                <span className="footer-badge">🔒 SSL Secured</span>
-                <span className="footer-badge">✅ GDPR Compliant</span>
-                <span className="footer-badge">🏆 ISO Certified</span>
+              <div className="ft-badges">
+                <span className="ft-bg">🔒 SSL Secured</span>
+                <span className="ft-bg">✅ GDPR Compliant</span>
+                <span className="ft-bg">🏆 ISO Certified</span>
               </div>
             </div>
             <div>
-              <div className="footer-heading">Learn</div>
-              {["courses","papers","library","blog"].map(p=><span key={p} className="footer-link" onClick={()=>goPage(p)}>{NAV_ICONS[p]} {p.charAt(0).toUpperCase()+p.slice(1)}</span>)}
+              <div className="ft-hd">Learn</div>
+              {["courses","papers","library","blog"].map(p=><span key={p} className="ft-lnk" onClick={()=>go(p)}>{NAV_ICONS[p]} {p.charAt(0).toUpperCase()+p.slice(1)}</span>)}
             </div>
             <div>
-              <div className="footer-heading">Platform</div>
-              {["tutors","pricing","dashboard","faq"].map(p=><span key={p} className="footer-link" onClick={()=>goPage(p)}>{NAV_ICONS[p]} {p.charAt(0).toUpperCase()+p.slice(1)}</span>)}
+              <div className="ft-hd">Platform</div>
+              {["tutors","pricing","dashboard","faq"].map(p=><span key={p} className="ft-lnk" onClick={()=>go(p)}>{NAV_ICONS[p]} {p.charAt(0).toUpperCase()+p.slice(1)}</span>)}
             </div>
             <div>
-              <div className="footer-heading">Company</div>
-              {["about","contact"].map(p=><span key={p} className="footer-link" onClick={()=>goPage(p)}>{NAV_ICONS[p]} {p.charAt(0).toUpperCase()+p.slice(1)}</span>)}
-              <span className="footer-link">🔒 Privacy Policy</span>
-              <span className="footer-link">📋 Terms of Service</span>
-              <span className="footer-link">🍪 Cookie Settings</span>
+              <div className="ft-hd">Company</div>
+              {["about","contact"].map(p=><span key={p} className="ft-lnk" onClick={()=>go(p)}>{NAV_ICONS[p]} {p.charAt(0).toUpperCase()+p.slice(1)}</span>)}
+              <span className="ft-lnk">🔒 Privacy Policy</span>
+              <span className="ft-lnk">📋 Terms of Service</span>
+              <span className="ft-lnk">🍪 Cookie Settings</span>
             </div>
             <div>
-              <div className="footer-heading">Newsletter</div>
+              <div className="ft-hd">Newsletter</div>
               <p style={{fontSize:13,color:"rgba(255,255,255,0.5)",marginBottom:12,lineHeight:1.5}}>Weekly study tips, new papers and AI trends.</p>
-              {newsletterSent ? <div style={{color:"#4ea8ff",fontWeight:600,fontSize:13}}>✅ Subscribed!</div> :
-                <><input style={{width:"100%",padding:"10px 12px",borderRadius:8,border:"1px solid rgba(255,255,255,0.2)",background:"rgba(255,255,255,0.08)",color:"#fff",fontSize:13,marginBottom:8,outline:"none"}} placeholder="Your email" value={newsletter} onChange={e=>setNewsletter(e.target.value)}/>
-                <button style={{width:"100%",padding:"9px",background:"#0057d9",color:"#fff",border:"none",borderRadius:8,fontWeight:700,cursor:"pointer",fontSize:13}} onClick={()=>{if(newsletter){setNewsletterSent(true);}}}>Subscribe</button></>
+              {newsSent ? <div style={{color:"#4ea8ff",fontWeight:600,fontSize:13}}>✅ Subscribed!</div> :
+                <><input style={{width:"100%",padding:"10px 12px",borderRadius:8,border:"1px solid rgba(255,255,255,0.2)",background:"rgba(255,255,255,0.08)",color:"#fff",fontSize:13,marginBottom:8,outline:"none"}} placeholder="Your email" value={newsletter} onChange={e=>setNews(e.target.value)}/>
+                <button style={{width:"100%",padding:"9px",background:"#0057d9",color:"#fff",border:"none",borderRadius:8,fontWeight:700,cursor:"pointer",fontSize:13}} onClick={()=>{if(newsletter)setNewsSent(true);}}>Subscribe Free</button></>
               }
             </div>
           </div>
-          <div className="footer-bottom">
-            <span className="footer-copy">© 2026–2030 Global Elite Academy. All Rights Reserved.</span>
-            <span className="footer-bottom-right">Making quality education accessible worldwide 🌍</span>
+          <div className="ft-bot">
+            <span className="ft-copy">© 2026–2030 Global Elite Academy. All Rights Reserved.</span>
+            <span className="ft-copy">Making quality education accessible worldwide 🌍</span>
           </div>
         </footer>
       </div>
     </>
   );
 }
+
+
 
