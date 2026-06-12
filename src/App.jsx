@@ -151,11 +151,7 @@ const MAIN_NAV = ["home","courses","papers","tutors","library","blog","pricing",
 const NAV_ICO  = {home:"🏠",courses:"🎓",papers:"📄",tutors:"👨‍🏫",library:"📚",blog:"📰",pricing:"💳",about:"ℹ️",contact:"📞",faq:"❓",dashboard:"📊",career:"💼",parents:"👨‍👩‍👧",community:"🌐"};
 EOF
 echo "P1 done: $(wc -l < /home/claude/P1.jsx) lines"
-{
-  "returncode" : 0,
-  "stdout" : "P1 done: 150 lines\n",
-  "stderr" : ""
-}
+
 cat > /home/claude/P2.jsx << 'EOF'
 // ─── CSS ──────────────────────────────────────────────────────────────────────
 const CSS = `
@@ -458,11 +454,7 @@ body{font-family:'Inter',sans-serif;background:#f0f7ff;color:#1a2744;overflow-x:
 `;
 EOF
 echo "P2 done: $(wc -l < /home/claude/P2.jsx) lines"
-{
-  "returncode" : 0,
-  "stdout" : "P2 done: 299 lines\n",
-  "stderr" : ""
-}
+
 cat > /home/claude/P3.jsx << 'EOF'
 // ─── ADSENSE COMPONENT ────────────────────────────────────────────────────────
 function AdBanner({ slot="auto", style={} }) {
@@ -694,11 +686,7 @@ Always be warm, motivating and supportive.`,
   };
 EOF
 echo "P3 done: $(wc -l < /home/claude/P3.jsx) lines"
-  {
-  "returncode" : 0,
-  "stdout" : "P3 done: 228 lines\n",
-  "stderr" : ""
-}
+ 
 cat > /home/claude/P4.jsx << 'EOF'
   // ── PAGES ────────────────────────────────────────────────────────────────────
 
@@ -1323,8 +1311,3 @@ cat > /home/claude/P4.jsx << 'EOF'
 }
 EOF
 echo "P4 done: $(wc -l < /home/claude/P4.jsx) lines"
-{
-  "returncode" : 0,
-  "stdout" : "P4 done: 621 lines\n",
-  "stderr" : ""
-}
